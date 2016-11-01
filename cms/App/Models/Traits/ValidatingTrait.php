@@ -6,16 +6,8 @@ use Validator;
 trait ValidatingTrait
 {
     /**
-     * Validation rules
-     *
-     * @var Array
-     */
-    protected $rules = [];
-
-    /**
      * Error message bag
      *
-     * @var Illuminate\Support\MessageBag
      */
     protected $errors;
 
@@ -25,6 +17,10 @@ trait ValidatingTrait
      * @var Array
      */
     protected $messages = [];
+
+    public function rules(){
+        return [];
+    }
 
     /**
      * Get the validation error messages from the model.
@@ -39,7 +35,7 @@ trait ValidatingTrait
     /**
      * Set error message bag
      *
-     * @var Illuminate\Support\MessageBag
+     * @param $errors
      */
     protected function setErrors($errors)
     {
@@ -71,7 +67,7 @@ trait ValidatingTrait
      */
     public function validate()
     {
-        $v = Validator::make($this->attributes, $this->rules, $this->messages, $this->attrLabels());
+        $v = Validator::make($this->attributes, $this->rules(), $this->messages, $this->attrLabels());
         if ($v->passes()) {
             return true;
         }
@@ -87,8 +83,4 @@ trait ValidatingTrait
     public function getAttrLabel($name){
         return array_get($this->attrLabels(), $name);
     }
-
-
-
-
 }

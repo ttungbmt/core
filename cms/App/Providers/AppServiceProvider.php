@@ -4,6 +4,7 @@ namespace CMS\App\Providers;
 
 use App\Providers\AppServiceProvider as BaseAppServiceProvider;
 use Blade;
+use Illuminate\Foundation\AliasLoader;
 use Lara\Auth\App\Providers\AuthServiceProvider;
 
 class AppServiceProvider extends BaseAppServiceProvider
@@ -15,6 +16,7 @@ class AppServiceProvider extends BaseAppServiceProvider
         RouteServiceProvider::class,
         EventServiceProvider::class,
         ComposerServiceProvider::class,
+        ValidationServiceProvider::class,
 
         // PACAKGES
         \Lara\Auth\App\Providers\AuthServiceProvider::class,
@@ -35,6 +37,8 @@ class AppServiceProvider extends BaseAppServiceProvider
         $this->bootLang();
 
         $this->bootBladeDirective();
+
+
     }
 
     /**
@@ -68,6 +72,7 @@ class AppServiceProvider extends BaseAppServiceProvider
         foreach($this->providers as $provider){
             $this->app->register($provider);
         }
+        $this->registerAliases();
     }
 
     protected function registerIncludes()
@@ -108,4 +113,10 @@ class AppServiceProvider extends BaseAppServiceProvider
             return "<?= $expression->format('m/d/Y H:i'); ?>";
         });
     }
+
+    protected function registerAliases()
+    {
+        AliasLoader::getInstance($this->aliases);
+    }
+
 }

@@ -1,6 +1,7 @@
 <?php
 namespace CMS\App\Http\Controllers;
 
+use Carbon\Carbon;
 use CMS\App\Models\Page;
 use Illuminate\Http\Request;
 use View;
@@ -25,5 +26,10 @@ class HomeController extends FrontendController
 //        if(!View::exists($page))
 //            return;
         return view($page, $this->data);
+    }
+
+    public function home(Page $page){
+
+        dd($page->updated_at);
     }
 }

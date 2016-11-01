@@ -1,14 +1,12 @@
 <?php
 namespace Lara\Auth\App\Http\Controllers;
 
-use Auth;
 use CMS\App\Http\Controllers\AdminController;
-use Illuminate\Http\Request;
 use Lara\Auth\App\DataTables\UsersDataTable;
 use Lara\Auth\App\Http\Requests\UserRequest;
 use Lara\Auth\App\Models\User;
-use Lara\Auth\App\Models\UserInfo;
 use Lara\Auth\App\Notifications\UserLogined;
+use PHPExcel_Cell;
 
 class UserController extends AdminController
 {
@@ -74,5 +72,42 @@ class UserController extends AdminController
             'forceClose' => true,
 //            'forceReload' => true
         ];
+    }
+
+
+    /**
+     * Xuất file Excel
+     * @param string $type
+     * @return mixed
+     */
+    public function exportTo($type = 'xlsx'){
+        $data = collect(User::all()->toArray())->map(function ($item) {
+            return array_dot($item);
+        });
+
+        // Xử lý định dạng
+        $format = in_array($type, ['xls', 'xlsx', 'csv', 'pdf']) ? $type : 'csv';
+        $excel = \Excel::create('user_excel', function($excel) use ($data) {
+
+            $excel->sheet('userSheet', function($sheet) use ($data) {
+                // Xử lý Range
+                $num = count(array_dot(array_first($data)))-1;
+                $end = PHPExcel_Cell::stringFromColumnIndex($num);
+
+                $range = "A1:{$end}1";
+                $sheet->setAutoFilter($range);
+                $sheet->setAutoSize(true);
+                $sheet->cells($range, function($cells) {
+                    $cells->setFont(['size' => '11', 'bold' => true]);
+                    $cells->setAlignment('center');
+                    $cells->setFontColor('#ffffff');
+                    $cells->setBackground('#00b050');
+                });
+
+                $sheet->with($data);
+            });
+        })->download($type);
+
+        return $excel;
     }
 }

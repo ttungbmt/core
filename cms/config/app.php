@@ -117,4 +117,6 @@ return [
             ],
         ]
     ],
+
+    'excel' => require('excel.php')
 ];

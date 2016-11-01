@@ -2,13 +2,32 @@
 namespace CMS\App\Models;
 
 use CMS\App\Models\Traits\ModelTrait;
+use CMS\App\Models\Traits\MutatorTrait;
 use CMS\App\Models\Traits\ValidatingTrait;
 use DB;
 use Illuminate\Database\Eloquent\Model;
 
 class MyModel extends Model
 {
-    use ModelTrait, ValidatingTrait;
+    use ModelTrait, ValidatingTrait, MutatorTrait;
+
+    protected $connection;
+
+    protected $perPage = 15;
+
+    protected $casts = [];
+
+    protected $observables = [];
+
+
+
+
+    // Thay đổi key model binding route
+    public function getRouteKeyName()
+    {
+        return parent::getRouteKeyName();
+    }
+
 
     public function field(){
 

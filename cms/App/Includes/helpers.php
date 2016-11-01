@@ -1,7 +1,36 @@
 <?php
+
 use CMS\App\Libs\MyCollection;
 use Illuminate\Support\Debug\Dumper;
-use Illuminate\Support\HtmlString;
+
+
+if (! function_exists('checkDateStr')) {
+    function checkDateStr($date, $format, $strict = false)
+    {
+        // date_create_from_format("d-m-Y","2013-03-15") // trả về false nếu sai
+        $dateAttr = date_parse_from_format($format, $date);
+        if($strict){ return $dateAttr['error_count'] > 0 ? false : true; };
+
+        return checkdate($dateAttr['month'], $dateAttr['day'], $dateAttr['year']);
+
+//        $check = \Validator::make([
+//            'date_at' => $date
+//        ], [
+//            'date_at' => 'date_format:'.$format
+//        ])->passes();
+    }
+}
+
+if (! function_exists('parseDateStr')) {
+    function parseDateStr($date, $format = 'd/m/Y', $strict = false)
+    {
+        if(!checkDateStr($date, $format)){ return false; }
+
+        $dateAttr = date_parse_from_format($format, $date);
+        // date_create('25-12-2016')
+        return \Carbon\Carbon::createFromDate($dateAttr['year'], $dateAttr['month'], $dateAttr['day']);
+    }
+}
 
 if (! function_exists('d')) {
     /**

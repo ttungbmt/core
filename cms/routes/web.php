@@ -10,8 +10,10 @@ use Lara\Auth\App\Models\User;
 
 
 Route::get('/', function(){
+    dd(\Validator::make(['go' => 'foo' ], ['go' => 'foo'])->passes());
+
 });
-//Route::get('home', 'HomeController@index');
+Route::get('homes/{page}', 'HomeController@home');
 Route::get('service', 'HomeController@index');
 Route::get('contact-us', 'HomeController@index');
 Route::get('about-us', 'HomeController@index');
